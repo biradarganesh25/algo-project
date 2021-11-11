@@ -12,6 +12,7 @@ void printv(vector<int> &v){
 }
 
 int unvisited=0, visited=1, fringe=2;
+int MAX_NODES=50;
 
 int main(){
     vector<vector<int>> test_graph={
