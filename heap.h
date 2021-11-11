@@ -8,15 +8,16 @@ extern int MAX_NODES;
 class Myheap{
 
     private: 
-    std::vector<int> node_to_indx;
-    std::vector<int> indx_to_node;
-    std::vector<int> heap_array;
+    int *node_to_indx;
+    int *indx_to_node;
+    int *heap_array;
     int size=0;
     void fix_heap_up(int i);
     void fix_heap_down(int i);
 
     public: 
     Myheap();
+    ~Myheap();
     void insert(int node, int bandwidth);
     void remove(int node);
     int get_max_bandwidth_node();

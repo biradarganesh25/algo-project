@@ -10,7 +10,7 @@ class MaxNodesException: public std::exception{
     }
 };
 
-inline void swap(vector<int> &v, int p1, int p2){
+inline void swap(int *v, int p1, int p2){
     int temp=v[p1];
     v[p1]=v[p2];
     v[p2]=temp;
@@ -18,9 +18,18 @@ inline void swap(vector<int> &v, int p1, int p2){
 
 Myheap::Myheap(){
     size=0;
-    node_to_indx.resize(MAX_NODES, -1);
-    indx_to_node.resize(MAX_NODES, -1);
-    heap_array.resize(MAX_NODES, -1);
+    heap_array = (int *)malloc(sizeof(int)*MAX_NODES);
+    node_to_indx = (int *)malloc(sizeof(int)*MAX_NODES);
+    indx_to_node = (int *)malloc(sizeof(int)*MAX_NODES);
+    // node_to_indx = new int[MAX_NODES];
+    // node_to_indx = new int[MAX_NODES];
+    // indx_to_node = new int[MAX_NODES];
+}
+
+Myheap::~Myheap(){
+    free(heap_array);
+    free(node_to_indx);
+    free(indx_to_node);
 }
 
 void Myheap::insert(int node, int bandwidth){
@@ -113,6 +122,9 @@ void Myheap::verify_node_to_indx_array(vector<int>&test_node_to_indx_array, int 
 
 }
 void Myheap::remove(int node){
+    if(size==0){
+        throw runtime_error("cannot remove node, size of heap is 0");
+    }
     int pos = node_to_indx[node];
     int node1 = indx_to_node[size-1];
 
