@@ -4,7 +4,9 @@
 #include <algorithm>
 #include "graph_generator.h"
 
-graph_node::graph_node(int v, int w) : vertex(v), weight(w){};
+graph_node::graph_node(int v, int w) : vertex(v), weight(w){
+    next=NULL;
+};
 
 graph_generator::
 graph_generator(int avg_degree, int num_nodes) : avg_degree(avg_degree), num_nodes(num_nodes){
@@ -16,7 +18,10 @@ graph_generator(int avg_degree, int num_nodes) : avg_degree(avg_degree), num_nod
     }
     random_shuffle(unique_edges.begin(), unique_edges.end());
 
-    final_graph = new vector<vector<graph_node>>(num_nodes, vector<graph_node>());
+    final_graph = (graph_node **)malloc(num_nodes*(sizeof(graph_node*)));
+    for(int i=0;i<num_nodes;i++){
+        final_graph[i]=NULL;
+    }
 
 }
 
@@ -26,12 +31,26 @@ float graph_generator::get_avg_degree(){
 
 void graph_generator::add_edge(int n1, int n2){
     int w=rand()%num_nodes;
-    (*final_graph)[n1].push_back(graph_node (n2, w));
-    (*final_graph)[n2].push_back(graph_node (n1, w));
+    if((final_graph)[n1]==NULL){
+        (final_graph)[n1]=new graph_node(n2, w);
+    }
+    else{
+        auto temp=new graph_node(n2,w);
+        temp->next=(final_graph)[n1];
+        (final_graph)[n1]=temp;
+    }
+    if((final_graph)[n2]==NULL){
+        (final_graph)[n2]=new graph_node(n1,w);
+    }
+    else{
+        auto temp = new graph_node(n1,w);
+        temp->next=(final_graph)[n1];
+        (final_graph)[n1]=temp;
+    }
     current_edges++;
 }
 
-vector<vector<graph_node>>* graph_generator::get_graph(){
+graph_node** graph_generator::get_graph(){
 
     for(int i=0;i<num_nodes;i+=1){
         add_edge(i,(i+1)%(num_nodes-1));
@@ -47,7 +66,7 @@ vector<vector<graph_node>>* graph_generator::get_graph(){
     return final_graph;
 }
 
-vector<vector<graph_node>>* get_graph(int degree, int num_nodes){
+graph_node** get_graph(int degree, int num_nodes){
 
     graph_generator gh(degree, num_nodes);
     return gh.get_graph();
