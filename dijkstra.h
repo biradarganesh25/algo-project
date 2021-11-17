@@ -4,16 +4,23 @@
 #include "graph_generator.h"
 extern int unvisited, visited, fringe;
 
+
+class result{
+    public:
+    int *path;
+    int length;
+    result(int *path, int len);
+};
+
 class DijkstraWithoutHeap{
     private: 
-    std::vector<int> status, cur_bw;
+    int *status, *cur_bw, *parent;
     int nodes_seen, nodes;
-    vector<int> parent;
     public:
 
     DijkstraWithoutHeap(int nodes);
 
     int get_node_fringe_max_bw();
-    vector<int> *find_max_bw_path(vector<vector<graph_node>> &gh, int s, int t);
+    result find_max_bw_path(graph_node **gh, int s, int t);
 };
 #endif

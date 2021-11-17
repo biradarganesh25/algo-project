@@ -8,9 +8,9 @@
 using namespace std;
 
 DijkstraWithoutHeap::DijkstraWithoutHeap(int nodes) : nodes(nodes){
-    status.resize(nodes, unvisited);
-    cur_bw.resize(nodes, -1);
-    parent.resize(nodes,-1);
+    status = (int *)malloc(sizeof(int)*nodes);
+    cur_bw = (int *)malloc(sizeof(int)*nodes);
+    parent = (int *)malloc(sizeof(int)*nodes);
 }
 
 int DijkstraWithoutHeap::get_node_fringe_max_bw(){
@@ -24,16 +24,17 @@ int DijkstraWithoutHeap::get_node_fringe_max_bw(){
 
     return max_node;
 }
-vector<int> * DijkstraWithoutHeap::find_max_bw_path(vector<vector<graph_node>> &gh, int s, int t){
+
+result DijkstraWithoutHeap::find_max_bw_path(graph_node **gh, int s, int t){
 
     cur_bw[s]=std::numeric_limits<int>::max();
     status[s]=visited;
     nodes_seen=1;
 
-    for(auto neigh:gh[s]){
-        cur_bw[neigh.vertex]=neigh.weight;
-        status[neigh.vertex]=fringe;
-        parent[neigh.vertex]=s;
+    for(auto neigh=gh[s];neigh!=NULL;neigh=neigh->next){
+        cur_bw[neigh->vertex]=neigh->weight;
+        status[neigh->vertex]=fringe;
+        parent[neigh->vertex]=s;
     }
 
     while (nodes_seen<nodes)
@@ -45,9 +46,9 @@ vector<int> * DijkstraWithoutHeap::find_max_bw_path(vector<vector<graph_node>> &
             break;
         }
 
-        for(int j=0;j<gh[max_node].size();j++){
-            int neigh=gh[max_node][j].vertex;
-            int weight = gh[max_node][j].weight;
+        for(auto neigh_node=gh[max_node];neigh_node!=NULL;neigh_node=neigh_node->next){
+            int neigh=neigh_node->vertex;
+            int weight = neigh_node->weight;
 
             if(status[neigh]==unvisited){
                 status[neigh]=fringe;
@@ -67,21 +68,28 @@ vector<int> * DijkstraWithoutHeap::find_max_bw_path(vector<vector<graph_node>> &
         throw runtime_error("Unexpected: could not find path from s to t");
     }
 
-    vector<int>* path_ptr = new vector<int>();
-    auto &path = *(path_ptr);
-
     int cur=t;
+    int total_nodes=0;
     while(cur!=s){
-        path.push_back(cur);
+        cur=parent[cur];
+        total_nodes++;
+    }
+    total_nodes++;
+    int *final_path = (int *)malloc(total_nodes*sizeof(int));
+    int p=total_nodes-1;
+    cur=t;
+    while(cur!=s){
+        final_path[p]=cur;
+        p--;
         cur=parent[cur];
     }
+    final_path[p]=cur;
+    result r(final_path, total_nodes);
 
-    path.push_back(s);
-
-    std::reverse(path.begin(),path.end());
-
-    return path_ptr;
+    return r;
 
 }
+
+result::result(int *path, int len):path(path),length(len){}
 
 

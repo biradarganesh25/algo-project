@@ -27,10 +27,17 @@ int main(){
         { 0, 0, 2, 0, 0, 0, 6, 7, 0 } 
         };
 
-    vector<vector<graph_node>> test_graph_final (9,vector<graph_node>());
+    int n = test_graph.size();
+    graph_node ** test_graph_final = new graph_node*[test_graph.size()];
+    for(int i=0;i<n;i++){
+        test_graph_final[i]=NULL;
+    }
     for(int i=0;i<test_graph.size();i++){
-        for(int j=0;j<test_graph[i].size();j++){
-            test_graph_final[i].push_back(graph_node(j,test_graph[i][j]));
+        test_graph_final[i]=new graph_node(0,test_graph[i][0]);
+        for(int j=1;j<test_graph[i].size();j++){
+            auto temp = new graph_node(j, test_graph[i][j]);
+            temp->next=test_graph_final[i];
+            test_graph_final[i]=temp;
         }
     }
 
@@ -40,18 +47,21 @@ int main(){
     DijkstraWithoutHeap djnoh(test_graph.size());
     for(int i=0;i<test_source_target.size();i++){
         auto v = test_source_target[i];
-        vector<int> *p = djnoh.find_max_bw_path(test_graph_final, v[0], v[1]);
+        result r = djnoh.find_max_bw_path(test_graph_final, v[0], v[1]);
+        vector<int> path(r.path, r.path+r.length);
         cout << "ans_paths" << endl;
         printv(ans_paths[i]);
         cout << "actual_paths from running algo:" << endl;
-        printv(*p);
-        if(!((*p)==ans_paths[i])){
-            free(p);
+        printv(path);
+        if(!(path==ans_paths[i])){
+            free(r.path);
             throw runtime_error("expected ans_path and ans_path from algo not equal!!");
         }
         else{
             cout<<"Test passed!!"<<endl;
         }
-        free(p);
+        free(r.path);
     }
+
+    free(test_graph_final);
 }
