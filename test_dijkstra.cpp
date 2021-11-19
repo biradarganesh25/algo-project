@@ -33,11 +33,17 @@ int main(){
         test_graph_final[i]=NULL;
     }
     for(int i=0;i<test_graph.size();i++){
-        test_graph_final[i]=new graph_node(0,test_graph[i][0]);
-        for(int j=1;j<test_graph[i].size();j++){
-            auto temp = new graph_node(j, test_graph[i][j]);
-            temp->next=test_graph_final[i];
-            test_graph_final[i]=temp;
+        for(int j=0;j<test_graph[i].size();j++){
+            if(test_graph[i][j]!=0){
+                if(test_graph_final[i]==NULL){
+                    test_graph_final[i]=new graph_node(j, test_graph[i][j]);
+                }
+                else{
+                    auto temp = new graph_node(j, test_graph[i][j]);
+                    temp->next = test_graph_final[i];
+                    test_graph_final[i] = temp;
+                }
+            }
         }
     }
 
@@ -45,22 +51,33 @@ int main(){
     vector<vector<int>> ans_paths={{0,7,8},{0,7,1,2,3}};
 
     DijkstraWithoutHeap djnoh(test_graph.size());
+    DijkstraWithHeap dj(test_graph.size());
     for(int i=0;i<test_source_target.size();i++){
         auto v = test_source_target[i];
+        
+        // without heap
         result r = djnoh.find_max_bw_path(test_graph_final, v[0], v[1]);
         vector<int> path(r.path, r.path+r.length);
         cout << "ans_paths" << endl;
         printv(ans_paths[i]);
-        cout << "actual_paths from running algo:" << endl;
+        cout << "actual_paths from running algo (without heap):" << endl;
         printv(path);
         if(!(path==ans_paths[i])){
             free(r.path);
             throw runtime_error("expected ans_path and ans_path from algo not equal!!");
         }
-        else{
-            cout<<"Test passed!!"<<endl;
+
+        // with heap
+        result r1 = dj.find_max_bw_path(test_graph_final, v[0], v[1]);
+        vector<int> path1(r1.path, r1.path+r1.length);
+        cout << "actual_paths from running algo (with heap):" << endl;
+        printv(path1);
+        if(!(path1==ans_paths[i])){
+            free(r1.path);
+            throw runtime_error("expected ans_path and ans_path from algo not equal!!");
         }
-        free(r.path);
+        free(r1.path);
+        cout << "Test passed!!" << endl;
     }
 
     free(test_graph_final);
