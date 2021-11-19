@@ -121,6 +121,13 @@ void Myheap::verify_node_to_indx_array(vector<int>&test_node_to_indx_array, int 
     cout<<endl;
 
 }
+void Myheap::print_heap_array(){
+    cout<<"heap array"<<endl;
+    for(int i=0;i<size;i++){
+        cout<<heap_array[i]<<" ";
+    }
+    cout<<endl;
+}
 void Myheap::remove(int node){
     if(size==0){
         throw runtime_error("cannot remove node, size of heap is 0");
@@ -189,4 +196,7 @@ int Myheap::get_max_bandwidth_node(){
     return indx_to_node[0];
 }
 
+int Myheap::get_size(){
+    return size;
+}
 
