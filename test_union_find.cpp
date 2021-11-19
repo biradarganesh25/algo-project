@@ -1,5 +1,5 @@
 #include<bits/stdc++.h>
-#include "kruskal.h"
+#include "common.h"
 #include "union_find.h"
 
 using namespace std;
