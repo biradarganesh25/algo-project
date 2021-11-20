@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include "graph_generator.h"
+#include "common.h"
 
 graph_node::graph_node(int v, int w) : vertex(v), weight(w){
     next=NULL;
@@ -22,6 +23,9 @@ graph_generator(int avg_degree, int num_nodes) : avg_degree(avg_degree), num_nod
     for(int i=0;i<num_nodes;i++){
         final_graph[i]=NULL;
     }
+     
+    int total_edges = (avg_degree*num_nodes)/2;
+    edges = new edge*[total_edges];
 
 }
 
@@ -47,6 +51,7 @@ void graph_generator::add_edge(int n1, int n2){
         temp->next=(final_graph)[n1];
         (final_graph)[n1]=temp;
     }
+    edges[current_edges]=new edge(n1, n2, w);
     current_edges++;
 }
 
@@ -66,10 +71,33 @@ graph_node** graph_generator::get_graph(){
     return final_graph;
 }
 
+edge** graph_generator::get_edges(){
+
+    return edges;
+}
+
 graph_node** get_graph(int degree, int num_nodes){
 
     graph_generator gh(degree, num_nodes);
     return gh.get_graph();
 }
 
+graph_generator::~graph_generator(){
+    for(int i=0;i<current_edges;i++){
+        delete edges[i];
+    }
+    delete []edges;
+
+    for(int i=0;i<num_nodes;i++){
+        auto j=final_graph[i];
+        for(j=final_graph[i];j!=NULL;)
+        {
+            auto temp=j->next;
+            delete j;
+            j=temp;
+        }
+    }
+
+    free(final_graph);
+}
 
