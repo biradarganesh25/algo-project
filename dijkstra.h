@@ -20,6 +20,7 @@ class DijkstraWithoutHeap{
     public:
 
     DijkstraWithoutHeap(int nodes);
+    ~DijkstraWithoutHeap();
 
     int get_node_fringe_max_bw();
     result find_max_bw_path(graph_node **gh, int s, int t);
@@ -33,6 +34,7 @@ class DijkstraWithHeap{
 
     public:
     DijkstraWithHeap(int nodes);
+    ~DijkstraWithHeap();
 
     int get_node_fringe_max_bw();
     result find_max_bw_path(graph_node **gh, int s, int t);

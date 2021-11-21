@@ -183,6 +183,18 @@ result DijkstraWithHeap::find_max_bw_path(graph_node **gh, int s, int t){
     return r;
 }
 
+DijkstraWithoutHeap::~DijkstraWithoutHeap(){
+    free(status);
+    free(cur_bw);
+    free(parent);
+}
+
+DijkstraWithHeap::~DijkstraWithHeap(){
+    free(status);
+    free(cur_bw);
+    free(parent);
+}
+
 result::result(int *path, int len):path(path),length(len){}
 
 

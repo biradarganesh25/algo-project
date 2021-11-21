@@ -66,6 +66,7 @@ int main(){
             free(r.path);
             throw runtime_error("expected ans_path and ans_path from algo not equal!!");
         }
+        free(r.path);
 
         // with heap
         result r1 = dj.find_max_bw_path(test_graph_final, v[0], v[1]);
@@ -80,5 +81,5 @@ int main(){
         cout << "Test passed!!" << endl;
     }
 
-    free(test_graph_final);
+    // free(test_graph_final);
 }
