@@ -195,6 +195,5 @@ DijkstraWithHeap::~DijkstraWithHeap(){
     free(parent);
 }
 
-result::result(int *path, int len):path(path),length(len){}
 
 

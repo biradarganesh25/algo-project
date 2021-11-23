@@ -6,12 +6,6 @@
 extern int unvisited, visited, fringe;
 
 
-class result{
-    public:
-    int *path;
-    int length;
-    result(int *path, int len);
-};
 
 class DijkstraWithoutHeap{
     private: 
