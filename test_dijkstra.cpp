@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include "dijkstra.h"
 #include "graph_generator.h"
+#include "kruskal.h"
 
 using namespace std;
 
@@ -29,6 +30,11 @@ int main(){
 
     int n = test_graph.size();
     graph_node ** test_graph_final = new graph_node*[test_graph.size()];
+    int num_edges = 14;
+    edge** edges = new edge*[num_edges];
+
+    unordered_set<string> st;
+    int pos=0;
     for(int i=0;i<n;i++){
         test_graph_final[i]=NULL;
     }
@@ -42,6 +48,13 @@ int main(){
                     auto temp = new graph_node(j, test_graph[i][j]);
                     temp->next = test_graph_final[i];
                     test_graph_final[i] = temp;
+                }
+                string key = to_string(j)+to_string(i);
+                cout<<key<<endl;
+                if(st.find(key)==st.end()){
+                    edges[pos]=new edge(i,j,test_graph[i][j]);
+                    st.insert(to_string(i)+to_string(j));
+                    pos++;
                 }
             }
         }
@@ -75,7 +88,20 @@ int main(){
         printv(path1);
         if(!(path1==ans_paths[i])){
             free(r1.path);
-            throw runtime_error("expected ans_path and ans_path from algo not equal!!");
+            throw runtime_error("expected ans_path and ans_path from with heap not equal!!");
+        }
+        free(r1.path);
+
+        // with kruskal
+        kruskal k;
+        r1 = k.find_max_bw_path(edges, num_edges, n, v[0],v[1]);
+        vector<int> path2(r1.path, r1.path+r1.length);
+        cout << "actual_paths from running algo (with kruskal):" << endl;
+        printv(path2);
+
+        if(!(path2==ans_paths[i])){
+            free(r1.path);
+            throw runtime_error("expected ans_path and ans_path from kruskals not equal!!");
         }
         free(r1.path);
         cout << "Test passed!!" << endl;
