@@ -5,9 +5,6 @@
 #include "graph_generator.h"
 #include "common.h"
 
-graph_node::graph_node(int v, int w) : vertex(v), weight(w){
-    next=NULL;
-};
 
 graph_generator::
 graph_generator(int avg_degree, int num_nodes) : avg_degree(avg_degree), num_nodes(num_nodes){
@@ -35,21 +32,22 @@ float graph_generator::get_avg_degree(){
 
 void graph_generator::add_edge(int n1, int n2){
     int w=rand()%num_nodes;
+    // cout<<"n1: "<<n1<<" n2: "<<n2<<endl;
     if((final_graph)[n1]==NULL){
-        (final_graph)[n1]=new graph_node(n2, w);
+        final_graph[n1]=new graph_node(n2, w);
     }
     else{
         auto temp=new graph_node(n2,w);
         temp->next=(final_graph)[n1];
-        (final_graph)[n1]=temp;
+        final_graph[n1]=temp;
     }
     if((final_graph)[n2]==NULL){
-        (final_graph)[n2]=new graph_node(n1,w);
+        final_graph[n2]=new graph_node(n1,w);
     }
     else{
         auto temp = new graph_node(n1,w);
-        temp->next=(final_graph)[n1];
-        (final_graph)[n1]=temp;
+        temp->next=(final_graph)[n2];
+        final_graph[n2]=temp;
     }
     edges[current_edges]=new edge(n1, n2, w);
     current_edges++;
@@ -59,10 +57,31 @@ graph_node** graph_generator::get_graph(){
 
     for(int i=0;i<num_nodes;i+=1){
         add_edge(i,(i+1)%(num_nodes-1));
+        // cout<<"****************"<<endl;
+        // for(int i=0;i<num_nodes;i++){
+        //     cout<<"i: "<<i<<" ";
+        //     for(auto j=final_graph[i];j!=NULL;j=j->next){
+        //         cout<<j->vertex<<"("<<j->weight<<")"<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        // cout<<endl;
+        // cout<<"****************"<<endl;
     }
 
     for(int i=0;i<unique_edges.size();i++){
         add_edge(unique_edges[i][0],unique_edges[i][1]);
+        // cout<<"****************"<<endl;
+        // for(int i=0;i<num_nodes;i++){
+        //     cout<<"i: "<<i<<" ";
+        //     for(auto j=final_graph[i];j!=NULL;j=j->next){
+        //         cout<<j->vertex<<"("<<j->weight<<")"<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        // cout<<endl;
+        // cout<<"****************"<<endl;
+        
         if(get_avg_degree() >= avg_degree){
             break;
         }

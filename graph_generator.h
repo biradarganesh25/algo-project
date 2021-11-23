@@ -8,16 +8,6 @@
 
 using namespace std;
 
-
-
-class graph_node{
-    public:
-    int vertex;
-    int weight;
-    graph_node *next;
-    graph_node(int v, int w);
-};
-
 class graph_generator{
     private: 
     int avg_degree, num_nodes; 
