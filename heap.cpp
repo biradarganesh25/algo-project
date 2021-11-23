@@ -10,6 +10,8 @@ class MaxNodesException: public std::exception{
     }
 };
 
+#define heap_debug 0
+
 inline void swap(int *v, int p1, int p2){
     int temp=v[p1];
     v[p1]=v[p2];
@@ -21,6 +23,11 @@ Myheap::Myheap(){
     heap_array = (int *)malloc(sizeof(int)*MAX_NODES);
     node_to_indx = (int *)malloc(sizeof(int)*MAX_NODES);
     indx_to_node = (int *)malloc(sizeof(int)*MAX_NODES);
+    for(int i=0;i<MAX_NODES;i++){
+        heap_array[i]=-1;
+        node_to_indx[i]=-1;
+        indx_to_node[i]=-1;
+    }
     // node_to_indx = new int[MAX_NODES];
     // node_to_indx = new int[MAX_NODES];
     // indx_to_node = new int[MAX_NODES];
@@ -33,6 +40,9 @@ Myheap::~Myheap(){
 }
 
 void Myheap::insert(int node, int bandwidth){
+    if(heap_debug>0){
+        cout<<"inserting heap: node: "<<node<<" bandwidth: "<<bandwidth<<endl;
+    }
     if(size==MAX_NODES){
         throw MaxNodesException(); 
     }
@@ -41,6 +51,10 @@ void Myheap::insert(int node, int bandwidth){
     heap_array[size] = bandwidth;
     fix_heap_up(size);    
     size++;
+    if(heap_debug){
+        cout<<"after inserting: heap_array, node_to_indx, indx_to node:"<<endl;
+        print_heap_array();
+    }
 }
 
 void Myheap::fix_heap_up(int i){
@@ -69,7 +83,13 @@ void Myheap::fix_heap_up(int i){
             heap_array[parent]=temp;
 
             i=parent;
-            parent=(parent-1)/2;
+            if(i%2==0){
+                parent = (i-2)/2;
+            }
+            else{
+                parent = (i-1)/2;
+            }
+            // parent=(parent-1)/2;
         }
         else{
             break;
@@ -127,8 +147,23 @@ void Myheap::print_heap_array(){
         cout<<heap_array[i]<<" ";
     }
     cout<<endl;
+    cout<<"node to indx: "<<endl;
+    
+    for(int i=0;i<MAX_NODES;i++){
+        cout<<node_to_indx[i]<<" ";
+    }
+
+    cout<<endl;
+    cout<<"indx_to_node: "<<endl;
+    for(int i=0;i<size;i++){
+        cout<<indx_to_node[i]<<" ";
+    }
+    cout<<endl;
 }
 void Myheap::remove(int node){
+    if(heap_debug > 0){
+        cout<<"delete called for: "<<node<<endl;
+    }
     if(size==0){
         throw runtime_error("cannot remove node, size of heap is 0");
     }
@@ -148,6 +183,10 @@ void Myheap::remove(int node){
     size--;
 
     fix_heap_down(pos);
+    if(heap_debug>0){
+        cout<<"after removing: heap_array, node_to_indx, indx_to node:"<<endl;
+        print_heap_array();
+    }
 }
 
 void Myheap::fix_heap_down(int pos){
