@@ -8,6 +8,7 @@ class union_find{
 
     public:
     union_find(int nodes);
+    ~union_find();
     void custom_union(int u, int v);
     int find(int u);
     bool check_cycle(int u, int v);

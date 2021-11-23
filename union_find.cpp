@@ -46,3 +46,7 @@ bool union_find::check_cycle(int u, int v){
     return false;
 }
 
+union_find::~union_find(){
+    free(rank);
+    free(parent);
+}
