@@ -23,7 +23,9 @@ void print_info(int s, int t, result r){
 }
 
 void run_algos(graph_node **gh, edge** edges, int num_edges){
-    for(int i=0;i<1;i++){
+    srand(time(NULL));
+    for(int i=0;i<5;i++){
+        cout<<i<<"th iteration of source & target"<<endl;
         int s = rand() % MAX_NODES;
         int t = rand() % MAX_NODES;
         cout<<"source: "<<s<<"target: "<<t<<endl;
@@ -62,7 +64,7 @@ void run_algos(graph_node **gh, edge** edges, int num_edges){
 
 int main(){
 
-    for(int i=0;i<1;i++){
+    for(int i=0;i<5;i++){
         cout<<"*********For pair of graphs******"<<endl;
         graph_generator gh_obj1(6, MAX_NODES);
         graph_node **gh1 = gh_obj1.get_graph();

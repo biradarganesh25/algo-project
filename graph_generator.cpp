@@ -14,6 +14,7 @@ graph_generator(int avg_degree, int num_nodes) : avg_degree(avg_degree), num_nod
             unique_edges.push_back({i,j});
         }
     }
+    srand(time(NULL));
     random_shuffle(unique_edges.begin(), unique_edges.end());
 
     final_graph = (graph_node **)malloc(num_nodes*(sizeof(graph_node*)));
